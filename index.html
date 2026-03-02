@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BikeShare Data Dashboard (Chart.js Lab)</title>
+  <title>Game Sale Data Dashboard (Chart.js Lab)</title>
   <link rel="stylesheet" href="styles.css" />
 
   <!-- Chart.js via CDN (official docs recommend CDN options like jsDelivr) -->
@@ -12,7 +12,7 @@
 
 <body>
   <header class="container">
-    <h1>BikeShare Data Dashboard</h1>
+    <h1>Game Sale Data Dashboard</h1>
     <p class="sub">
       Build charts from real-ish city data. Start with Bar + Line, then pick an extension chart.
     </p>
@@ -24,27 +24,27 @@
 
       <label class="label">Chart</label>
       <select id="chartType">
-        <option value="bar" selected>Bar (compare neighborhoods)</option>
+        <option value="bar" selected>Bar (by genre)</option>
         <option value="line">Line (trend over time)</option>
         <option value="scatter">Scatter (relationship)</option>
         <option value="doughnut">Doughnut (parts of whole)</option>
         <option value="radar">Radar (multi-metric compare)</option>
       </select>
 
-      <label class="label">Month</label>
-      <select id="monthSelect"></select>
+      <label class="label">Year</label>
+      <select id="yearSelect"></select>
 
-      <label class="label">Neighborhood</label>
-      <select id="hoodSelect"></select>
+      <label class="label">Genre</label>
+      <select id="genreSelect"></select>
 
       <label class="label">Metric</label>
       <select id="metricSelect">
-        <option value="trips" selected>Trips</option>
+        <option value="platform" selected>Platform</option>
+        <option value="unitsM">Units Sold (Millions)</option>
         <option value="revenueUSD">Revenue (USD)</option>
-        <option value="avgDurationMin">Avg Duration (min)</option>
-        <option value="incidents">Incidents</option>
-        <option value="tempC">Temperature (C)</option>
-        <option value="precipMM">Precipitation (mm)</option>
+        <option value="region">Region</option>
+        <option value="publisher">Publisher</option>
+        <option value="reviewScore">Review Score</option>
       </select>
 
       <button id="renderBtn">Render Chart</button>
@@ -58,7 +58,7 @@
       <h2>Chart</h2>
       <canvas id="chartCanvas" height="140"></canvas>
       <p class="tiny">
-        If your chart doesn’t update, make sure you destroy the old chart instance first.
+        If your chart doesn't update, make sure you destroy the old chart instance first.
       </p>
     </section>
 
