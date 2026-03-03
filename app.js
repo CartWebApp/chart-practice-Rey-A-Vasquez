@@ -46,7 +46,7 @@ function buildConfig(type, { month, city, metric }) {
   if (type === "bar") return barByCity(month, metric);
   if (type === "line") return lineOverTime(city, ["avgTempC", "minTempC", "maxTempC"]);
   if (type === "scatter") return scatterHumidityVsMaxTemp(city);
-  if (type === "doughnut") return doughnutMemberVsCasual(month, city); //can't really do much with the pie chart with climate
+  if (type === "doughnut") return doughnutMaxVsMin(month, city); //can't really do much with the pie chart with climate
   if (type === "radar") return radarCompareCitys(month);
   return barByCity(month, metric);
 }
@@ -133,18 +133,18 @@ function scatterHumidityVsMaxTemp(city) {
   };
 }
 
-// DOUGHNUT — member vs casual share for one city + month: Can't do much with climate
-function doughnutMemberVsCasual(month, city) {
+// DOUGHNUT — maxTemp vs minTemp share for one city + month: Can't do much with climate, so I guess?
+function doughnutMaxVsMin(month, city) {
   const row = chartData.find(r => r.month === month && r.city === city);
 
-  const member = Math.round(row.memberShare * 100);
-  const casual = 100 - member;
+  const maxTemp = Math.round(row.maxTempC * 100);
+  const minTemp = 100 - maxTemp;
 
   return {
     type: "doughnut",
     data: {
-      labels: ["Members (%)", "Casual (%)"],
-      datasets: [{ label: "Rider mix", data: [member, casual] }]
+      labels: ["maxTemps (%)", "minTemp (%)"],
+      datasets: [{ label: "Rider mix", data: [maxTemp, minTemp] }]
     },
     options: {
       plugins: {

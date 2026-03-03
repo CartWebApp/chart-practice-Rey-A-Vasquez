@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Game Sale Data Dashboard (Chart.js Lab)</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="/styles.css" />
 
   <!-- Chart.js via CDN (official docs recommend CDN options like jsDelivr) -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/chart.umd.min.js"></script>
@@ -12,10 +12,11 @@
 
 <body>
   <header class="container">
-    <h1>Climate Data Dashboard</h1>
+    <h1>Game Data Dashboard</h1>
     <p class="sub">
-      Build charts from real-ish climate data. Start with Bar + Line, then pick an extension chart.
+      Build charts from real-ish game data. Start with Bar + Line, then pick an extension chart.
     </p>
+    <a href="/index.html" class="navLink">Climate Data</a>
   </header>
 
   <main class="container grid">
@@ -24,29 +25,26 @@
 
       <label class="label">Chart</label>
       <select id="chartType">
-        <option value="bar" selected>Bar (by city)</option>
+        <option value="bar" selected>Bar (by platform)</option>
         <option value="line">Line (trend over time)</option>
         <option value="scatter">Scatter (relationship)</option>
         <option value="doughnut">Doughnut (parts of whole)</option>
         <option value="radar">Radar (multi-metric compare)</option>
       </select>
 
-      <label class="label">Month</label>
-      <select id="monthSelect"></select>
+      <label class="label">Year</label>
+      <select id="yearSelect"></select>
 
-      <label class="label">City</label>
-      <select id="citySelect"></select>
+      <label class="label">Platform</label>
+      <select id="platformSelect"></select>
 
       <label class="label">Metric</label>
       <select id="metricSelect">
-        <option value="avgTempC" selected>Temperature (°C)</option>
-        <option value="minTempC">Minimum Temperature (°C)</option>
-        <option value="maxTempC">Max Temperature (°C)</option>
-        <option value="precipMM">Precipitation (mm)</option>
-        <option value="humidityPct">Humidity (pct)</option>
-        <option value="windKph">Wind (kph)</option>
-        <option value="airQualityIndex">Air Quality</option>
-        <option value="sunshineHours">Sunshine Hours</option>
+        <option value="unitsM" selected>Units Sold (M)</option>
+        <option value="revenueUSD">Revenue (USD)</option>
+        <option value="priceUSD">Price (USD)</option>
+        <option value="reviewScore">Review Score</option>
+        <option value="esports">Esport Teams</option>
       </select>
 
       <button id="renderBtn">Render Chart</button>
@@ -74,6 +72,6 @@
     <span>Chart.js Lab — Intro JS + Data Visualization</span>
   </footer>
 
-  <script type="module" src="chart.js"></script>
+  <script type="module" src="../gameSale-Chart/chart.js"></script>
 </body>
 </html>
