@@ -44,9 +44,9 @@ renderBtn.addEventListener("click", () => {
 // --- Students: you’ll edit / extend these functions ---
 function buildConfig(type, { month, city, metric }) {
   if (type === "bar") return barByCity(month, metric);
-  if (type === "line") return lineOverTime(city, ["trips", "revenueUSD"]);
-  if (type === "scatter") return scatterTripsVsTemp(city);
-  if (type === "doughnut") return doughnutMemberVsCasual(month, city);
+  if (type === "line") return lineOverTime(city, ["avgTempC", "minTempC", "maxTempC"]);
+  if (type === "scatter") return scatterHumidityVsMaxTemp(city);
+  if (type === "doughnut") return doughnutMemberVsCasual(month, city); //can't really do much with the pie chart with climate
   if (type === "radar") return radarCompareCitys(month);
   return barByCity(month, metric);
 }
@@ -97,7 +97,7 @@ function lineOverTime(city, metrics) {
     options: {
       responsive: true,
       plugins: {
-        title: { display: true, text: `Trends over time: ${city}` }
+        title: { display: true, text: `Temperature over time: ${city}` }
       },
       scales: {
         y: { title: { display: true, text: "Value" } },
@@ -107,33 +107,33 @@ function lineOverTime(city, metrics) {
   };
 }
 
-// SCATTER — relationship between temperature and trips
-function scatterTripsVsTemp(city) {
+// SCATTER — relationship between Humidity and Maximum temperature
+function scatterHumidityVsMaxTemp(city) {
   const rows = chartData.filter(r => r.city === city);
 
-  const points = rows.map(r => ({ x: r.tempC, y: r.trips }));
+  const points = rows.map(r => ({ x: r.humidityPct, y: r.maxTempC }));
 
   return {
     type: "scatter",
     data: {
       datasets: [{
-        label: `Trips vs Temp (${city})`,
+        label: `Humidity VS Max Temperature (${city})`,
         data: points
       }]
     },
     options: {
       plugins: {
-        title: { display: true, text: `Does temperature affect trips? (${city})` }
+        title: { display: true, text: `Does humidity affect max temperature? (${city})` }
       },
       scales: {
-        x: { title: { display: true, text: "Temperature (C)" } },
-        y: { title: { display: true, text: "Trips" } }
+        x: { title: { display: true, text: "Humidity (pct)" } },
+        y: { title: { display: true, text: "Max Temperature (°C)" } }
       }
     }
   };
 }
 
-// DOUGHNUT — member vs casual share for one city + month
+// DOUGHNUT — member vs casual share for one city + month: Can't do much with climate
 function doughnutMemberVsCasual(month, city) {
   const row = chartData.find(r => r.month === month && r.city === city);
 
@@ -158,7 +158,7 @@ function doughnutMemberVsCasual(month, city) {
 function radarCompareCitys(month) {
   const rows = chartData.filter(r => r.month === month);
 
-  const metrics = ["trips", "revenueUSD", "avgDurationMin", "incidents"];
+  const metrics = ["avgTempC", "windKph", "humidityPct", "airQualityIndex", "precipMM"];
   const labels = metrics;
 
   const datasets = rows.map(r => ({
