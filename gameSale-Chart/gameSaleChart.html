@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Sale Data Dashboard (Chart.js Lab)</title>
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Chart.js via CDN (official docs recommend CDN options like jsDelivr) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@latest/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+  <header class="container">
+    <h1>Climate Data Dashboard</h1>
+    <p class="sub">
+      Build charts from real-ish climate data. Start with Bar + Line, then pick an extension chart.
+    </p>
+  </header>
+
+  <main class="container grid">
+    <section class="card">
+      <h2>Controls</h2>
+
+      <label class="label">Chart</label>
+      <select id="chartType">
+        <option value="bar" selected>Bar (by city)</option>
+        <option value="line">Line (trend over time)</option>
+        <option value="scatter">Scatter (relationship)</option>
+        <option value="doughnut">Doughnut (parts of whole)</option>
+        <option value="radar">Radar (multi-metric compare)</option>
+      </select>
+
+      <label class="label">Month</label>
+      <select id="monthSelect"></select>
+
+      <label class="label">City</label>
+      <select id="citySelect"></select>
+
+      <label class="label">Metric</label>
+      <select id="metricSelect">
+        <option value="avgTempC" selected>Temperature (°C)</option>
+        <option value="minTempC">Minimum Temperature (°C)</option>
+        <option value="maxTempC">Max Temperature (°C)</option>
+        <option value="precipMM">Precipitation (mm)</option>
+        <option value="humidityPct">Humidity (pct)</option>
+        <option value="windKph">Wind (kph)</option>
+        <option value="airQualityIndex">Air Quality</option>
+        <option value="sunshineHours">Sunshine Hours</option>
+      </select>
+
+      <button id="renderBtn">Render Chart</button>
+
+      <div class="hint">
+        <strong>Goal:</strong> Make at least 2 different chart types using the dataset.
+      </div>
+    </section>
+
+    <section class="card chartCard">
+      <h2>Chart</h2>
+      <canvas id="chartCanvas" height="140"></canvas>
+      <p class="tiny">
+        If your chart doesn't update, make sure you destroy the old chart instance first.
+      </p>
+    </section>
+
+    <section class="card">
+      <h2>Dataset preview</h2>
+      <pre id="dataPreview"></pre>
+    </section>
+  </main>
+
+  <footer class="container foot">
+    <span>Chart.js Lab — Intro JS + Data Visualization</span>
+  </footer>
+
+  <script type="module" src="chart.js"></script>
+</body>
+</html>
