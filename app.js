@@ -1,9 +1,9 @@
 // change this to reference the dataset you chose to work with.
-import { gameSales as chartData } from "./data/gameSales.js";
+import { climateData as chartData } from "./data/climateData.js";
 
 // --- DOM helpers ---
-const yearSelect = document.getElementById("yearSelect");
-const genreSelect = document.getElementById("genreSelect");
+const monthSelect = document.getElementById("monthSelect");
+const citySelect = document.getElementById("citySelect");
 const metricSelect = document.getElementById("metricSelect");
 const chartTypeSelect = document.getElementById("chartType");
 const renderBtn = document.getElementById("renderBtn");
@@ -13,14 +13,14 @@ const canvas = document.getElementById("chartCanvas");
 let currentChart = null;
 
 // --- Populate dropdowns from data ---
-const years = [...new Set(chartData.map(r => r.year))];
-const genres = [...new Set(chartData.map(r => r.genre))];
+const months = [...new Set(chartData.map(r => r.month))];
+const cities = [...new Set(chartData.map(r => r.city))];
 
-years.forEach(m => yearSelect.add(new Option(m, m)));
-genres.forEach(h => genreSelect.add(new Option(h, h)));
+months.forEach(m => monthSelect.add(new Option(m, m)));
+cities.forEach(h => citySelect.add(new Option(h, h)));
 
-yearSelect.value = years[0];
-genreSelect.value = genres[0];
+monthSelect.value = months[0];
+citySelect.value = cities[0];
 
 // Preview first 6 rows
 dataPreview.textContent = JSON.stringify(chartData.slice(0, 6), null, 2);
@@ -28,34 +28,34 @@ dataPreview.textContent = JSON.stringify(chartData.slice(0, 6), null, 2);
 // --- Main render ---
 renderBtn.addEventListener("click", () => {
   const chartType = chartTypeSelect.value;
-  const year = yearSelect.value;
-  const genre = genreSelect.value;
+  const month = monthSelect.value;
+  const city = citySelect.value;
   const metric = metricSelect.value;
 
   // Destroy old chart if it exists (common Chart.js gotcha)
   if (currentChart) currentChart.destroy();
 
   // Build chart config based on type
-  const config = buildConfig(chartType, { year, genre, metric });
+  const config = buildConfig(chartType, { month, city, metric });
 
   currentChart = new Chart(canvas, config);
 });
 
 // --- Students: you’ll edit / extend these functions ---
-function buildConfig(type, { year, genre, metric }) {
-  if (type === "bar") return barByGenre(year, metric);
-  if (type === "line") return lineOverTime(genre, ["priceUSD", "revenueUSD"]);
-  if (type === "scatter") return scatterUnitsVReview(genre);
-  if (type === "doughnut") return doughnutPlatformShare(year, genre);
-  if (type === "radar") return radarComparegenres(year);
-  return barByGenre(year, metric);
+function buildConfig(type, { month, city, metric }) {
+  if (type === "bar") return barByCity(month, metric);
+  if (type === "line") return lineOverTime(city, ["trips", "revenueUSD"]);
+  if (type === "scatter") return scatterTripsVsTemp(city);
+  if (type === "doughnut") return doughnutMemberVsCasual(month, city);
+  if (type === "radar") return radarCompareCitys(month);
+  return barByCity(month, metric);
 }
 
-// Task A: BAR — compare genres for a given year
-function barByGenre(year, metric) {
-  const rows = chartData.filter(r => r.year === year);
+// Task A: BAR — compare Citys for a given month
+function barByCity(month, metric) {
+  const rows = chartData.filter(r => r.month === month);
 
-  const labels = rows.map(r => r.genre);
+  const labels = rows.map(r => r.city);
   const values = rows.map(r => r[metric]);
 
   return {
@@ -63,28 +63,28 @@ function barByGenre(year, metric) {
     data: {
       labels,
       datasets: [{
-        label: `${metric} in ${year}`,
+        label: `${metric} in ${month}`,
         data: values
       }]
     },
     options: {
       responsive: true,
       plugins: {
-        genre: { display: true, text: `genre comparison (${year})` }
+        title: { display: true, text: `City comparison (${month})` }
       },
       scales: {
-        y: { genre: { display: true, text: metric } },
-        x: { genre: { display: true, text: "genre" } }
+        y: { title: { display: true, text: metric } },
+        x: { title: { display: true, text: "City" } }
       }
     }
   };
 }
 
-// Task B: LINE — trend over time for one genre (2 datasets)
-function lineOverTime(genre, metrics) {
-  const rows = chartData.filter(r => r.genre === genre);
+// Task B: LINE — trend over time for one City (2 datasets)
+function lineOverTime(city, metrics) {
+  const rows = chartData.filter(r => r.city === city);
 
-  const labels = rows.map(r => r.year);
+  const labels = rows.map(r => r.month);
 
   const datasets = metrics.map(m => ({
     label: m,
@@ -97,82 +97,72 @@ function lineOverTime(genre, metrics) {
     options: {
       responsive: true,
       plugins: {
-        genre: { display: true, text: `Trends over time: ${genre}` }
+        title: { display: true, text: `Trends over time: ${city}` }
       },
       scales: {
-        y: { genre: { display: true, text: "Value" } },
-        x: { genre: { display: true, text: "year" } }
+        y: { title: { display: true, text: "Value" } },
+        x: { title: { display: true, text: "Month" } }
       }
     }
   };
 }
 
-// SCATTER — relationship between Units and Review Score
-function scatterUnitsVReview(genre) {
-  const rows = chartData.filter(r => r.genre === genre);
+// SCATTER — relationship between temperature and trips
+function scatterTripsVsTemp(city) {
+  const rows = chartData.filter(r => r.city === city);
 
-  const points = rows.map(r => ({ x: r.unitsM, y: r.reviewScore }));
+  const points = rows.map(r => ({ x: r.tempC, y: r.trips }));
 
   return {
     type: "scatter",
     data: {
       datasets: [{
-        label: `Units Sold(M) vs Review Score (${genre})`,
+        label: `Trips vs Temp (${city})`,
         data: points
       }]
     },
     options: {
       plugins: {
-        genre: { display: true, text: `Does the review score affect sales? (${genre})` }
+        title: { display: true, text: `Does temperature affect trips? (${city})` }
       },
       scales: {
-        x: { genre: { display: true, text: "Units Sold (M)" } },
-        y: { genre: { display: true, text: "Review Score" } }
+        x: { title: { display: true, text: "Temperature (C)" } },
+        y: { title: { display: true, text: "Trips" } }
       }
     }
   };
 }
 
-// DOUGHNUT — platform share for one genre + year
-function doughnutPlatformShare(year, genre) {
-  const row = chartData.filter(r => r.year === year);
-  let x = 0;
-  let y = 0;
-  let z = 0;
+// DOUGHNUT — member vs casual share for one city + month
+function doughnutMemberVsCasual(month, city) {
+  const row = chartData.find(r => r.month === month && r.city === city);
 
-  let total = x + y + z;
-
-  console.log(row);
-
-  let consoles = (x / total) * 100;
-  let PC = (y / total) * 100;
-  let mobile = (z / total) * 100;
-
-  console.log(x);
+  const member = Math.round(row.memberShare * 100);
+  const casual = 100 - member;
 
   return {
     type: "doughnut",
     data: {
-      labels: ["consoles (%)", "PC (%)", "Mobile (%)"],
-      datasets: [{ label: "Platform mix", data: [consoles, PC, mobile] }]
+      labels: ["Members (%)", "Casual (%)"],
+      datasets: [{ label: "Rider mix", data: [member, casual] }]
     },
     options: {
       plugins: {
-        genre: { display: true, text: `Platform Mix: ${genre} (${year})` }
+        title: { display: true, text: `Rider mix: ${city} (${month})` }
       }
     }
   };
 }
 
-// RADAR — compare genres across multiple metrics for one year
-function radarComparegenres(year) {
-  const rows = chartData.filter(r => r.year === year);
+// RADAR — compare Citys across multiple metrics for one month
+function radarCompareCitys(month) {
+  const rows = chartData.filter(r => r.month === month);
 
   const metrics = ["trips", "revenueUSD", "avgDurationMin", "incidents"];
   const labels = metrics;
 
   const datasets = rows.map(r => ({
-    label: r.genre,
+    label: r.city,
     data: metrics.map(m => r[m])
   }));
 
@@ -181,7 +171,7 @@ function radarComparegenres(year) {
     data: { labels, datasets },
     options: {
       plugins: {
-        genre: { display: true, text: `Multi-metric comparison (${year})` }
+        title: { display: true, text: `Multi-metric comparison (${month})` }
       }
     }
   };
